@@ -1,11 +1,18 @@
 #include <vector>
+#include <array>
 #include <string>
 #include <fstream>
-#include <utility>
+#include <stdexcept>
+#include <iostream>
 
 using std::vector;
-using std::pair;
+using std::array;
 using std::string;
+using std::cout;
+using std::cin;
+using std::endl;
+
+constexpr unsigned SIZE = 30000;
 
 bool check_code(vector<char>& code){
     if(code.front() == '[' || code.front() == ']')
@@ -13,54 +20,68 @@ bool check_code(vector<char>& code){
     
 }
 
-void process(vector<pair<char,char>>::iterator& ite){
-    if(ite->first=='+')
-            ite++->second++;
-        if(ite->first=='-')
-            ite++->second--; 
-        if(ite->first=='>')
-            ++ite;
-        if(ite->first=='<')
-            --ite;
-        if(ite->first=='.')
-            putchar(ite->second);
-        if(ite->first==',')
-            ite->second = getchar();
+void process(array<char,SIZE>::iterator& ite, char& c){
+    if(c=='+')
+        ++(*ite);
+    if(c=='-')
+        --(*ite); 
+    if(c=='>')
+        ++ite;
+    if(c=='<')
+        --ite;
+    if(c=='.')
+        cout << *ite;
+    if(c==','){
+        cout << endl;
+        cin >> *ite;
+    }
 }
 
 int main(){
     #include <fstream>
     std::ifstream file("source");
     char c;
-    constexpr unsigned size = 30000;
-    vector<pair<char,char>> code;
+    array<char,SIZE> table;
+    vector<char> code;
+    int bracket_check=0,pos_check=0;
     while(file.get(c)){
         if(c == '+' || c == '-' || c == '>' || c == '<' || c == '[' || c == ']' || c == ',' || c == '.' ){
-            code.emplace_back(c,0);
+            if(c == '[')
+                ++bracket_check;
+            if(c == ']')
+                --bracket_check;
+            if(c == '>')
+                ++pos_check;
+            if(c == '<')
+                --pos_check;
+            if(pos_check>=SIZE || pos_check<0)
+                throw std::runtime_error("Pointer going out of memory");
+            if(bracket_check<0)
+                throw std::runtime_error("Too many closing brackets");
+            code.emplace_back(c);
         }
     }
-    vector<pair<char,char>>::iterator ite = code.begin();
-    vector<pair<char,char>>::iterator saved_ite;
-    while(ite!=code.end()){
-        if(ite->first=='['){
+    if(bracket_check)
+        throw std::runtime_error("Unclosed brakcet");
+
+    array<char,SIZE>::iterator ite = table.begin();
+    array<char,SIZE>::iterator saved_ite;
+    unsigned saved_pos;
+    for(unsigned i=0;i<code.size();++i){
+        if(code[i]=='['){
             saved_ite = ite;
-            --saved_ite;
-            ++ite;
-            while(saved_ite->second){
-                if(ite->second==']'){
-                    if(saved_ite->second){
-                        ite = saved_ite;
-                        ++++ite;
-                    } else{
-                        ++ite;
-                        continue;
-                    }
+            ++i;
+            saved_pos = i;
+            while(*saved_ite){
+                if(code[i]==']'){
+                    i = saved_pos;
                 } else {
-                    process(ite);
+                    process(ite,code[i]);
+                    ++i;
                 } 
             }
         } else{
-            process(ite);
+            process(ite,code[i]);
         }
     }
     return 0;
