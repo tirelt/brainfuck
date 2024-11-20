@@ -7,7 +7,7 @@
             "type": "cppbuild",
             "label": "Build brainfuck",
             "command": "make",
-            "args": ["main"],
+            "args": ["brainfuck"],
             "options": {
                 "cwd": "${cwd}"
             },

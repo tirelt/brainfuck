@@ -8,7 +8,7 @@
             "name": "Debug brainfuck",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${cwd}",
+            "program": "${cwd}/brainfuck",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${cwd}",

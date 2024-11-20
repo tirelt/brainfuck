@@ -7,10 +7,10 @@ using std::string;
 
 int main(){
     #include <fstream>
-    std::ifstream file("test_input");
+    std::ifstream file("source");
     char c;
     vector<char> code;
-    while(file>>c){
+    while(file.get(c)){
         if(c == '+' || c == '-' || c == '>' || c == '<' || c == '[' || c == ']' || c == ',' || c == '.' ){
             code.push_back(c);
         }
