@@ -10,7 +10,7 @@ using std::list;
 using std::string;
 using std::cout;
 using std::cin;
-using std::endl;
+using std::flush;
 
 vector<char>  get_code(std::ifstream& file){
     int bracket_check=0,pos_check=0;
@@ -102,6 +102,6 @@ int main(int argc, char **argv){
     list<int> table(1,0);
     list<int>::iterator ite = table.begin();
     process_code(code.begin(),code.end(),ite,table,print_char);
-    cout<<endl;
+    cout<<flush;
    return 0;
 }

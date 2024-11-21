@@ -15,8 +15,8 @@ to print `char` values
 ```
 # Interpreter logic
 - no memory size limit, it can extend indefinitely to the left or right.
-- the data type is `int` so allow negative values.
-- the loop ends when `*ite==0` (not ``*ite>0` like some other interpreter).
+- the data type is `int` so the interpreter allows negative values.
+- the loop ends when `*ite==0` (not ``*ite>0` like some other interpreters).
 
 
 # Building & Debuging
@@ -30,7 +30,7 @@ make clean # to delete object files and the program
 ```
 ## Debuging 
 
-Using `VSCode` change `.vscode/tasks.json` and `.vscode/launch.json` as per below
+Using `VSCode` add the config to `.vscode/tasks.json` and `.vscode/launch.json`:
 
 ```Bash
 {
@@ -67,3 +67,4 @@ Using `VSCode` change `.vscode/tasks.json` and `.vscode/launch.json` as per belo
     "preLaunchTask": "Build brainfuck"
 }
 ```
+By default the debuger runs `source`.
