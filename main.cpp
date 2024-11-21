@@ -1,4 +1,5 @@
 #include <vector>
+#include <list>
 #include <array>
 #include <string>
 #include <fstream>
@@ -14,36 +15,10 @@ using std::endl;
 
 constexpr unsigned SIZE = 30000;
 
-bool check_code(vector<char>& code){
-    if(code.front() == '[' || code.front() == ']')
-        return false;
-    
-}
-
-void process(array<char,SIZE>::iterator& ite, char& c){
-    if(c=='+')
-        ++(*ite);
-    if(c=='-')
-        --(*ite); 
-    if(c=='>')
-        ++ite;
-    if(c=='<')
-        --ite;
-    if(c=='.')
-        cout << *ite;
-    if(c==','){
-        cout << endl;
-        cin >> *ite;
-    }
-}
-
-int main(){
-    #include <fstream>
-    std::ifstream file("source");
-    char c;
-    array<char,SIZE> table;
-    vector<char> code;
+vector<char>  get_code(std::ifstream& file){
     int bracket_check=0,pos_check=0;
+    char c;
+    vector<char> code;
     while(file.get(c)){
         if(c == '+' || c == '-' || c == '>' || c == '<' || c == '[' || c == ']' || c == ',' || c == '.' ){
             if(c == '[')
@@ -63,26 +38,62 @@ int main(){
     }
     if(bracket_check)
         throw std::runtime_error("Unclosed brakcet");
+    return code;
 
-    array<char,SIZE>::iterator ite = table.begin();
-    array<char,SIZE>::iterator saved_ite;
-    unsigned saved_pos;
-    for(unsigned i=0;i<code.size();++i){
-        if(code[i]=='['){
+}
+
+void process(array<unsigned char,SIZE>::iterator& ite, char& c){
+    if(c=='+')
+        ++(*ite);
+    if(c=='-')
+        --(*ite); 
+    if(c=='>')
+        ++ite;
+    if(c=='<')
+        --ite;
+    if(c=='.')
+        cout << *ite;
+    if(c==','){
+        cout << endl;
+        cin >> *ite;
+    }
+}
+
+vector<char>::iterator find_closing(vector<char>::iterator begin, vector<char>::iterator end, char target){
+    unsigned counter = 1;  
+    while(begin != end && counter != 0){
+        ++begin;
+        if(*begin=='[')
+            counter += 1;
+        if(*begin==']')
+            counter -= 1;
+    }
+    return begin;
+}
+void process_code(vector<char>::iterator begin, vector<char>::iterator end, array<unsigned char,SIZE>::iterator& ite,array<unsigned char,SIZE>& table){
+    vector<char> test(begin,end);
+    auto saved_ite = ite;
+    for(auto ite_code=begin;ite_code!=end;++ite_code){
+        if(*ite_code=='['){
+            ++ite_code;
             saved_ite = ite;
-            ++i;
-            saved_pos = i;
-            while(*saved_ite){
-                if(code[i]==']'){
-                    i = saved_pos;
-                } else {
-                    process(ite,code[i]);
-                    ++i;
-                } 
+            auto new_end = find_closing(ite_code,end,']');
+            while(*ite){
+                process_code(ite_code,new_end,ite,table);
             }
+            ite_code = new_end;
         } else{
-            process(ite,code[i]);
+            process(ite,*ite_code);
         }
     }
+}
+int main(){
+    std::ifstream file("source");
+    vector<char> code = get_code(file);
+
+    array<unsigned char,SIZE> table;
+    array<unsigned char,SIZE>::iterator ite = table.begin();
+    
+    process_code(code.begin(),code.end(),ite,table);
     return 0;
 }
