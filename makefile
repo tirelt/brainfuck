@@ -15,7 +15,7 @@ $(TARGET): $(OBJS)
 	${CXX} $(DEBUG_FLAG) $(CXXFLAGS) -c $< -o $@
 
 run:
-	./$(TARGET)
+	./$(TARGET) source
 
 clean:
 	rm -f $(TARGET) *.o

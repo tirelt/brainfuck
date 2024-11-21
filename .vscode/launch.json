@@ -9,11 +9,11 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${cwd}/brainfuck",
-            "args": [],
+            "args": ["source"],
             "stopAtEntry": false,
             "cwd": "${cwd}",
             "environment": [],
-            "externalConsole": false,
+            "externalConsole": true,
             "MIMode": "lldb",
             "setupCommands": [
                 {

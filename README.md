@@ -4,10 +4,20 @@ Building a [Brainfuck](https://en.wikipedia.org/wiki/Brainfuck#:~:text=Brainfuck
 
 # Usage 
 
-The interpreter is alreay built you can use following
+The interpreter is alreay built, you can use the following
 ```bash
-./brainfuck source
+./brainfuck [name]
 ```
+to print `char` values
+
+```bash
+./brainfuck [name] -char
+```
+# Interpreter logic
+- no memory size limit, it can extend indefinitely to the left or right.
+- the data type is `int` so allow negative values.
+- the loop ends when `*ite==0` (not ``*ite>0` like some other interpreter).
+
 
 # Building & Debuging
 
@@ -15,7 +25,7 @@ The interpreter is alreay built you can use following
 
 ```Bash
 make #to build the project
-make run #to run the program
+make run #to run the program equivalent. By defualt is lauch source i.e. the command is equivalent to ./brainfuck source
 make clean # to delete object files and the program
 ```
 ## Debuging 
@@ -25,29 +35,28 @@ Using `VSCode` change `.vscode/tasks.json` and `.vscode/launch.json` as per belo
 ```Bash
 {
     "type": "cppbuild",
-    "label": "Build [path_to_folder]/main",
+    "label": "Build brainfuck",
     "command": "make",
-    "args": ["main"],
+    "args": ["brainfuck"],
     "options": {
-        "cwd": "${cwd}/[path_to_folder]"
+        "cwd": "${cwd}"
     },
-    "detail": "Build [path_to_folder]/main"
+    "detail": "Build brainfuck"
 }
 ```
 
 ```Bash
 {
-    "name": "Debug [path_to_folder]/main",
+    "name": "Debug brainfuck",
     "type": "cppdbg",
     "request": "launch",
-    "program": "${cwd}/[path_to_folder]/main",
-    "args": [],
+    "program": "${cwd}/brainfuck",
+    "args": ["source"],
     "stopAtEntry": false,
-    "cwd": "${cwd}/[path_to_folder]",
+    "cwd": "${cwd}",
     "environment": [],
-    "externalConsole": false,
-    "MIMode": "gdb",
-    "miDebuggerPath": "/usr/bin/gdb",
+    "externalConsole": true,
+    "MIMode": "lldb",
     "setupCommands": [
         {
         "description": "Enable pretty-printing for gdb",
@@ -55,6 +64,6 @@ Using `VSCode` change `.vscode/tasks.json` and `.vscode/launch.json` as per belo
         "ignoreFailures": true
         }
     ],
-    "preLaunchTask": "Build [path_to_folder]/main"
+    "preLaunchTask": "Build brainfuck"
 }
 ```

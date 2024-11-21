@@ -1,0 +1,7 @@
+,>,>,
+<<[>>>+>+<<<<-]>>>>[<<<<+>>>>-] copy first value to cell 3
+<[<<[>>>+>+<<<<-]>>>>[<<<<+>>>>-]<<-] multiply input 1 by input 2 to cell 4
+<[>>-<<-] substract input 3 from cell 4
+>>>>+<< put 1 to cell 6
+[>]>> if cell 4 == 0 return cell 6 (=1) otherwise return cell 7 (=0)
+. output result 
