@@ -1,13 +1,12 @@
 #include <vector>
 #include <list>
-#include <array>
 #include <string>
 #include <fstream>
 #include <stdexcept>
 #include <iostream>
 
 using std::vector;
-using std::array;
+using std::list;
 using std::string;
 using std::cout;
 using std::cin;
@@ -42,17 +41,29 @@ vector<char>  get_code(std::ifstream& file){
 
 }
 
-void process(array<unsigned char,SIZE>::iterator& ite, char& c){
+void process(list<int>::iterator& ite, char& c,list<int>& list){
     if(c=='+')
         ++(*ite);
     if(c=='-')
         --(*ite); 
-    if(c=='>')
-        ++ite;
-    if(c=='<')
-        --ite;
+    if(c=='>'){
+        if(ite == --list.end()){
+            list.push_back(0);
+            ite = --list.end();
+        } else {
+            ++ite;
+        }
+    }
+    if(c=='<'){
+        if(ite == list.begin()){
+            list.push_front(0);
+            ite = list.begin();
+        } else {
+            --ite;
+        }
+    }
     if(c=='.')
-        cout << *ite;
+        cout << char(*ite);
     if(c==','){
         cout << endl;
         cin >> *ite;
@@ -70,30 +81,27 @@ vector<char>::iterator find_closing(vector<char>::iterator begin, vector<char>::
     }
     return begin;
 }
-void process_code(vector<char>::iterator begin, vector<char>::iterator end, array<unsigned char,SIZE>::iterator& ite,array<unsigned char,SIZE>& table){
-    vector<char> test(begin,end);
-    auto saved_ite = ite;
+void process_code(vector<char>::iterator begin, vector<char>::iterator end,list<int>::iterator& ite,list<int>& list){
     for(auto ite_code=begin;ite_code!=end;++ite_code){
         if(*ite_code=='['){
             ++ite_code;
-            saved_ite = ite;
             auto new_end = find_closing(ite_code,end,']');
             while(*ite){
-                process_code(ite_code,new_end,ite,table);
+                process_code(ite_code,new_end,ite,list);
             }
             ite_code = new_end;
         } else{
-            process(ite,*ite_code);
+            process(ite,*ite_code,list);
         }
     }
 }
 int main(){
     std::ifstream file("source");
     vector<char> code = get_code(file);
+    file.close();
 
-    array<unsigned char,SIZE> table;
-    array<unsigned char,SIZE>::iterator ite = table.begin();
-    
+    list<int> table(1,0);
+    list<int>::iterator ite = table.begin();
     process_code(code.begin(),code.end(),ite,table);
     return 0;
 }
